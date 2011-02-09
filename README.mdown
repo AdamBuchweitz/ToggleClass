@@ -1,0 +1,8 @@
+# Toggle Class
+## For Lua and CoronaSDK
+
+### Author: Adam Buchweitz [(email)](mailto:adam@adambuchweitz.com "Email me")
+
+I wanted to keep this as simple as possible, so it isn't very feature full. It
+does what I needed it to do, and I left it at that. But I'll be updating it
+periodically, and please feel free to fork it and improve it!
