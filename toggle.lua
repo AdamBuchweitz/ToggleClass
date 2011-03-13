@@ -4,8 +4,9 @@ new = function(...)
     local params, b = ...
     params = b or params
 
-    local onURL, offURL, callback, state = params.on, params.off, params.callback or nil, params.state
+    local onURL, offURL, onText, offText, callback, state = params.on, params.off, params.onText, params.offText, params.callback, params.state
     local onWidth, onHeight, offWidth, offHeight = params.onWidth, params.onHeight, params.offWidth, params.offHeight
+
     local togGroup = display.newGroup()
     if state == "false" then state = false end
     togGroup.state = state
@@ -13,6 +14,8 @@ new = function(...)
     local onImg 
     if onWidth and onHeight then
         onImg = display.newImageRect(onURL, onWidth, onHeight)
+    elseif onText then
+        onImg = display.newText(onText, 0, 0, params.font, params.size)
     else
         onImg = display.newImage(onURL)
     end
@@ -22,6 +25,8 @@ new = function(...)
     local offImg 
     if offWidth and offHeight then
         offImg = display.newImageRect(offURL, offWidth, offHeight)
+    elseif offText then
+        offImg = display.newText(offText, 0, 0, params.font, params.size)
     else
         offImg = display.newImage(offURL)
     end
@@ -47,7 +52,7 @@ new = function(...)
             onImg.isVisible = true
             offImg.isVisible = false
         end
-        callback( togGroup )
+        if callback then callback( togGroup ) end
     end
     togGroup:addEventListener("tap", togGroup)
 
@@ -61,7 +66,7 @@ new = function(...)
             onImg.isVisible = false
             offImg.isVisible = true
         end
-        if fireCallback then callback(togGroup) end
+        if fireCallback and callback then callback(togGroup) end
     end
 
     return togGroup
