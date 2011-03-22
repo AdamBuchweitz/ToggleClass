@@ -1,73 +1,128 @@
-module(..., package.seeall)
+local ToggleClass = {}
 
-new = function(...)
-    local params, b = ...
-    params = b or params
+ToggleClass.help = function()
+    print("Syntax for a new Toggle::\n\n\tToggleClass.new()")
+end
 
-    local onURL, offURL, onText, offText, callback, state = params.on, params.off, params.onText, params.offText, params.callback, params.state
-    local onWidth, onHeight, offWidth, offHeight = params.onWidth, params.onHeight, params.offWidth, params.offHeight
+--[[
 
-    local togGroup = display.newGroup()
-    if state == "false" then state = false end
-    togGroup.state = state
+@params = table
 
-    local onImg 
-    if onWidth and onHeight then
-        onImg = display.newImageRect(onURL, onWidth, onHeight)
-    elseif onText then
-        onImg = display.newText(onText, 0, 0, params.font, params.size)
-    else
-        onImg = display.newImage(onURL)
+Available params:
+
+    -- Start with the state true or false
+    state,
+
+    -- On and Off images
+    on,
+    off,
+
+    -- Use these if you are using dynamic resolution images
+    onWidth,
+    onHeight,
+    offWidth
+    offHeight,
+
+    -- Use these if you want a pure text toggle
+    -- To use these you may NOT include any of the image parameters
+    onText,
+    offText
+    font,
+    textSize,
+    textColor,
+
+
+]]
+ToggleClass.new = function(params)
+    local params = params
+    if not params then
+        error("You must supply parameters to make a new Toggle")
+        return false
     end
-    onImg:setReferencePoint(display.TopLeftReferencePoint)
+
+    local toggle = display.newGroup()
+    toggle.state = tostring(params.state) ~= "false"
+
+    local onImg
+    if params.onWidth and params.onHeight then
+        onImg = display.newImageRect(params.on, params.onWidth, params.onHeight)
+        onImg:setReferencePoint(display.TopLeftReferencePoint) 
+    elseif params.onText then
+        onImg = display.newText(params.onText, 0, 0, params.font, params.textSize)
+        onImg:setReferencePoint(display.CenterLeftReferencePoint) 
+        onImg:setTextColor(params.textColor[1],params.textColor[2],params.textColor[3])
+    else
+        onImg = display.newImage(params.on)
+        onImg:setReferencePoint(display.TopLeftReferencePoint) 
+    end
     onImg.x, onImg.y = 0, 0
 
-    local offImg 
-    if offWidth and offHeight then
-        offImg = display.newImageRect(offURL, offWidth, offHeight)
-    elseif offText then
-        offImg = display.newText(offText, 0, 0, params.font, params.size)
+    local offImg
+    if params.offWidth and params.offHeight then
+        offImg = display.newImageRect(params.off, params.offWidth, params.offHeight)
+        offImg:setReferencePoint(display.TopLeftReferencePoint) 
+    elseif params.offText then
+        offImg = display.newText(params.offText, 0, 0, params.font, params.textSize)
+        offImg:setReferencePoint(display.CenterLeftReferencePoint) 
+        offImg:setTextColor(params.textColor[1],params.textColor[2],params.textColor[3])
     else
-        offImg = display.newImage(offURL)
+        offImg = display.newImage(params.off)
+        offImg:setReferencePoint(display.TopLeftReferencePoint) 
     end
-    offImg:setReferencePoint(display.TopLeftReferencePoint)
     offImg.x, offImg.y = 0, 0
 
-    if not togGroup.state then
+    if not toggle.state then
         onImg.isVisible = false
     else
         offImg.isVisible = false
     end
 
-    togGroup:insert(onImg)
-    togGroup:insert(offImg)
 
-    togGroup.tap = function()
-        if togGroup.state == true or togGroup.state == "true" then
-            togGroup.state = false
-            onImg.isVisible = false
-            offImg.isVisible = true
-        else
-            togGroup.state = true
+    toggle:insert(onImg)
+    toggle:insert(offImg)
+
+    toggle.touch = function(self, event)
+        if event.phase == "began" then
+            if toggle.state == true then
+                toggle.state = false
+                onImg.isVisible = false
+                offImg.isVisible = true
+            else
+                toggle.state = true
+                onImg.isVisible = true
+                offImg.isVisible = false
+            end
+            if params.callback then params.callback( toggle ) end
+            return false
+        end
+    end
+    if onImg.text then
+        onImgRect = display.newRect(0, 0, onImg.contentWidth, onImg.contentHeight*.5)
+        onImgRect:setReferencePoint(display.CenterLeftReferencePoint) 
+        onImgRect:setFillColor(0,0,0,0)
+        offImgRect = display.newRect(0, 0, offImg.contentWidth, offImg.contentHeight*.5)
+        offImgRect:setReferencePoint(display.CenterLeftReferencePoint) 
+        offImgRect:setFillColor(0,0,0,0)
+        local rectGroup = display.newGroup(onImgRect, offImgRect)
+        rectGroup:addEventListener("touch", toggle)
+        toggle:insert(rectGroup)
+    else
+        toggle:addEventListener("touch", toggle)
+    end
+
+    toggle.setState = function( bool, fireCallback )
+        toggle.state = tostring(bool) ~= "false"
+        if toggle.state then
             onImg.isVisible = true
             offImg.isVisible = false
-        end
-        if callback then callback( togGroup ) end
-    end
-    togGroup:addEventListener("tap", togGroup)
-
-    togGroup.setState = function( bool, fireCallback )
-        local bool = bool; if bool == "false" then bool = false end
-        togGroup.state = bool
-        if togGroup.state == true or togGroup.state == "true" then
-            onImg.isVisible = true
-            offImg.isVisible = false
         else
             onImg.isVisible = false
             offImg.isVisible = true
         end
-        if fireCallback and callback then callback(togGroup) end
+        if fireCallback and params.callback then params.callback(toggle) end
     end
 
-    return togGroup
+    return toggle
 end
+
+return ToggleClass
