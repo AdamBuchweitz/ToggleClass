@@ -46,33 +46,33 @@ ToggleClass.new = function(params)
     local onImg
     if params.onWidth and params.onHeight then
         onImg = display.newImageRect(params.on, params.onWidth, params.onHeight)
-        onImg:setReferencePoint(display.TopLeftReferencePoint) 
+        onImg:setReferencePoint(display.TopLeftReferencePoint)
     elseif params.onText then
         onImg = display.newText(params.onText, 0, 0, params.font, params.textSize)
-        onImg:setReferencePoint(display.CenterLeftReferencePoint) 
+        onImg:setReferencePoint(display.CenterLeftReferencePoint)
         onImg:setTextColor(params.textColor[1],params.textColor[2],params.textColor[3])
     else
         onImg = display.newImage(params.on)
-        onImg:setReferencePoint(display.TopLeftReferencePoint) 
+        onImg:setReferencePoint(display.TopLeftReferencePoint)
     end
     onImg.x, onImg.y = 0, 0
 
     local offImg
     if params.offWidth and params.offHeight then
         offImg = display.newImageRect(params.off, params.offWidth, params.offHeight)
-        offImg:setReferencePoint(display.TopLeftReferencePoint) 
+        offImg:setReferencePoint(display.TopLeftReferencePoint)
     elseif params.offText then
         offImg = display.newText(params.offText, 0, 0, params.font, params.textSize)
-        offImg:setReferencePoint(display.CenterLeftReferencePoint) 
+        offImg:setReferencePoint(display.CenterLeftReferencePoint)
         offImg:setTextColor(params.textColor[1],params.textColor[2],params.textColor[3])
     else
         offImg = display.newImage(params.off)
-        offImg:setReferencePoint(display.TopLeftReferencePoint) 
+        offImg:setReferencePoint(display.TopLeftReferencePoint)
     end
     offImg.x, offImg.y = 0, 0
 
     if not toggle.state then
-        onImg.isVisible = false
+        onImg.isVisible  = false
     else
         offImg.isVisible = false
     end
@@ -84,24 +84,24 @@ ToggleClass.new = function(params)
     toggle.touch = function(self, event)
         if event.phase == "began" then
             if toggle.state == true then
-                toggle.state = false
-                onImg.isVisible = false
+                toggle.state     = false
+                onImg.isVisible  = false
                 offImg.isVisible = true
             else
-                toggle.state = true
-                onImg.isVisible = true
+                toggle.state     = true
+                onImg.isVisible  = true
                 offImg.isVisible = false
             end
             if params.callback then params.callback( toggle ) end
-            return false
         end
+        return false
     end
     if onImg.text then
         onImgRect = display.newRect(0, 0, onImg.contentWidth, onImg.contentHeight*.5)
-        onImgRect:setReferencePoint(display.CenterLeftReferencePoint) 
+        onImgRect:setReferencePoint(display.CenterLeftReferencePoint)
         onImgRect:setFillColor(0,0,0,0)
         offImgRect = display.newRect(0, 0, offImg.contentWidth, offImg.contentHeight*.5)
-        offImgRect:setReferencePoint(display.CenterLeftReferencePoint) 
+        offImgRect:setReferencePoint(display.CenterLeftReferencePoint)
         offImgRect:setFillColor(0,0,0,0)
         local rectGroup = display.newGroup(onImgRect, offImgRect)
         rectGroup:addEventListener("touch", toggle)
@@ -113,10 +113,10 @@ ToggleClass.new = function(params)
     toggle.setState = function( bool, fireCallback )
         toggle.state = tostring(bool) ~= "false"
         if toggle.state then
-            onImg.isVisible = true
+            onImg.isVisible  = true
             offImg.isVisible = false
         else
-            onImg.isVisible = false
+            onImg.isVisible  = false
             offImg.isVisible = true
         end
         if fireCallback and params.callback then params.callback(toggle) end
