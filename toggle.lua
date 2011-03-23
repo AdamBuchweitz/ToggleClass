@@ -1,38 +1,101 @@
-local ToggleClass = {}
 
-ToggleClass.help = function()
-    print("Syntax for a new Toggle::\n\n\tToggleClass.new()")
-end
+        --[[ ########## Toggle Class ########## ]--
 
---[[
+    Version 1.0
 
-@params = table
+    Written and supported by Adam Buchweitz and Crawl Space Games
 
-Available params:
+    http://crawlspacegames.com
+    http://twitter.com/crawlspacegames
 
-    -- Start with the state true or false
-    state,
 
-    -- On and Off images
-    on,
-    off,
+    For inquiries about Crawl Space, email us at
+        heyyou@crawlspacegames.com
 
-    -- Use these if you are using dynamic resolution images
-    onWidth,
-    onHeight,
-    offWidth
-    offHeight,
+    For support with this class, email me at
+        adam@crawlspacegames.com
 
-    -- Use these if you want a pure text toggle
-    -- To use these you may NOT include any of the image parameters
-    onText,
-    offText
-    font,
-    textSize,
-    textColor,
 
+    Copyright (C) 2011 Crawl Space Games - All Rights Reserved
+
+
+
+    :: FEATURES ::
+
+    This toggle is a simple toggle switch. It is capable of switching
+    between two images, with or without dynamic resolution, and can also
+    switch between two strings.
+
+    To toggle images, the only parameters needed are on and off images.
+    To use dynamic resolution images, simply supply additional parameters
+    for width and height.
+
+    To toggle strings, you have the option of supplying a font, a text
+    size, and a text color.
+
+    The toggle switches via touch, but you can also set the state manually,
+    and retrieve its state at any time.
+
+    Declare a default value with a 'state' parameter, and the method to
+    fire with a 'callback' parameter.
+
+
+    :: USAGE ::
+
+        ToggleClass.new( params )
+
+
+
+    :: EXAPMLE - Switch between two images ::
+
+        local toggle = require "toggle"
+
+        local myToggle = toggle.new( { on = "path/to/imageOn.png", off = "path/to/imageOff.png", callback = myFunction } )
+
+
+    :: EXAPMLE - Switch between two images with dynamic resolution, and default the state to off ::
+
+        local toggle = require "toggle"
+
+        local params = {
+            on        = "path/to/imageOn.png",
+            onWidth   = 100,
+            onHeight  = 50,
+            off       = "path/to/imageOff.png",
+            offWidth  = 100,
+            offHeight = 50,
+            state     = false,
+            callback  = myFunction
+        }
+        local myToggle = toggle.new( params )
+
+    :: EXAPMLE - Switch between two strings with a custom font, size, and color ::
+
+        local toggle = require "toggle"
+
+        local params = {
+            onText       = "On",
+            offText      = "Off",
+            font         = "Helvetica",
+            textSize     = "24",
+            textColorOn  = { 255, 0, 0 }
+            textColorOff = { 0, 255, 0 }
+            callback     = myFunction
+        }
+        local myToggle = toggle.new( params )
+
+    :: EXAPMLE - Change the VISUAL state manually, this does NOT fire the attached callback ::
+
+        myToggle.setState(true)
+
+    :: EXAPMLE - Change the state manually and fire its attached callback ::
+
+        myToggle.setState(true, true)
 
 ]]
+
+local ToggleClass = {}
+
 ToggleClass.new = function(params)
     local params = params
     if not params then
@@ -48,9 +111,10 @@ ToggleClass.new = function(params)
         onImg = display.newImageRect(params.on, params.onWidth, params.onHeight)
         onImg:setReferencePoint(display.TopLeftReferencePoint)
     elseif params.onText then
+        params.textColorOn = params.textColorOn or {255,255,255}
         onImg = display.newText(params.onText, 0, 0, params.font, params.textSize)
         onImg:setReferencePoint(display.CenterLeftReferencePoint)
-        onImg:setTextColor(params.textColor[1],params.textColor[2],params.textColor[3])
+        onImg:setTextColor(params.textColorOn[1],params.textColorOn[2],params.textColorOn[3])
     else
         onImg = display.newImage(params.on)
         onImg:setReferencePoint(display.TopLeftReferencePoint)
@@ -62,9 +126,10 @@ ToggleClass.new = function(params)
         offImg = display.newImageRect(params.off, params.offWidth, params.offHeight)
         offImg:setReferencePoint(display.TopLeftReferencePoint)
     elseif params.offText then
+        params.textColorOff = params.textColorOn or {0,0,0}
         offImg = display.newText(params.offText, 0, 0, params.font, params.textSize)
         offImg:setReferencePoint(display.CenterLeftReferencePoint)
-        offImg:setTextColor(params.textColor[1],params.textColor[2],params.textColor[3])
+        offImg:setTextColor(params.textColorOff[1],params.textColorOff[2],params.textColorOff[3])
     else
         offImg = display.newImage(params.off)
         offImg:setReferencePoint(display.TopLeftReferencePoint)
@@ -76,7 +141,6 @@ ToggleClass.new = function(params)
     else
         offImg.isVisible = false
     end
-
 
     toggle:insert(onImg)
     toggle:insert(offImg)
@@ -96,6 +160,7 @@ ToggleClass.new = function(params)
         end
         return false
     end
+
     if onImg.text then
         onImgRect = display.newRect(0, 0, onImg.contentWidth, onImg.contentHeight*.5)
         onImgRect:setReferencePoint(display.CenterLeftReferencePoint)
@@ -119,7 +184,7 @@ ToggleClass.new = function(params)
             onImg.isVisible  = false
             offImg.isVisible = true
         end
-        if fireCallback and params.callback then params.callback(toggle) end
+        if fireCallback and params.callback then params.callback( toggle ) end
     end
 
     return toggle
