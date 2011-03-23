@@ -1,8 +1,119 @@
 # Toggle Class
-## For Lua and CoronaSDK
+### For Lua and CoronaSDK
 
-### Author: Adam Buchweitz [(email)](mailto:adam@adambuchweitz.com "Email me")
+__Author: Adam Buchweitz [(email)](mailto:adam@adambuchweitz.com "Email me")__
 
-I wanted to keep this as simple as possible, so it isn't very feature full. It
-does what I needed it to do, and I left it at that. But I'll be updating it
-periodically, and please feel free to fork it and improve it!
+Version 1.0
+
+Written and supported by Adam Buchweitz and Crawl Space Games
+
+http://crawlspacegames.com
+http://twitter.com/crawlspacegames
+
+
+For inquiries about Crawl Space, email us at
+heyyou@crawlspacegames.com
+
+For support with this class, email me at
+adam@crawlspacegames.com
+
+
+Copyright (C) 2011 Crawl Space Games - All Rights Reserved
+
+
+---
+
+
+###:: FEATURES ::
+
+This toggle is a simple toggle switch. It is capable of switching
+between two images, with or without dynamic resolution, and can also
+switch between two strings.
+
+To toggle images, the only parameters needed are on and off images.
+To use dynamic resolution images, simply supply additional parameters
+for width and height.
+
+To toggle strings, you have the option of supplying a font, a text
+size, and a text color.
+
+The toggle switches via touch, but you can also set the state manually,
+and retrieve its state at any time.
+
+Declare a default value with a 'state' parameter, and the method to
+fire with a 'callback' parameter.
+
+
+---
+
+
+###:: USAGE ::
+
+<code>
+    ToggleClass.new( params )
+</code>
+
+
+###:: EXAMPLE ::
+####Switch between two images
+
+<code>
+    local toggle = require "toggle"
+
+    local myToggle = toggle.new( { on = "path/to/imageOn.png", off = "path/to/imageOff.png", callback = myFunction } )
+</code>
+
+
+###:: EXAPMLE ::
+####Switch between two images with dynamic resolution, and default the state to off
+
+<code>
+    local toggle = require "toggle"
+
+    local params = {
+        on        = "path/to/imageOn.png",
+        onWidth   = 100,
+        onHeight  = 50,
+        off       = "path/to/imageOff.png",
+        offWidth  = 100,
+        offHeight = 50,
+        state     = false,
+        callback  = myFunction
+    }
+
+    local myToggle = toggle.new( params )
+</code>
+
+###:: EXAMPLE ::
+####Switch between two strings with a custom font, size, and color
+
+<code>
+    local toggle = require "toggle"
+
+    local params = {
+        onText       = "On",
+        offText      = "Off",
+        font         = "Helvetica",
+        textSize     = "24",
+        textColorOn  = { 255, 0, 0 }
+        textColorOff = { 0, 255, 0 }
+        callback     = myFunction
+    }
+
+    local myToggle = toggle.new( params )
+</code>
+
+###:: EXAMPLE ::
+####Change the VISUAL state manually, this does NOT fire the attached callback
+
+<code>
+	myToggle.setState(true)
+</code>
+
+###:: EXAMPLE ::
+####Change the state manually and fire its attached callback
+
+<code>
+	myToggle.setState(true, true)
+</code>
+
