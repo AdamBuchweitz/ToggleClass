@@ -95,8 +95,8 @@ fire with a 'callback' parameter.
         offText      = "Off",
         font         = "Helvetica",
         textSize     = "24",
-        textColorOn  = { 255, 0, 0 }
-        textColorOff = { 0, 255, 0 }
+        textColorOn  = { 255, 0, 0 },
+        textColorOff = { 0, 255, 0 },
         callback     = myFunction
     }
 
