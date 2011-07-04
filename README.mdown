@@ -3,12 +3,13 @@
 
 __Author: Adam Buchweitz [(email)](mailto:adam@adambuchweitz.com "Email me")__
 
-Version 1.0
+Version 1.1
 
 Written and supported by Adam Buchweitz and Crawl Space Games
 
 http://crawlspacegames.com
 http://twitter.com/crawlspacegames
+http://twitter.com/adambuchweitz
 
 
 For inquiries about Crawl Space, email us at
@@ -43,6 +44,8 @@ and retrieve its state at any time.
 Declare a default value with a 'state' parameter, and the method to
 fire with a 'callback' parameter.
 
+Your "on" and "off" images or strings will likely be different widths or
+heights, so for visual display aid you may also assign a reference point.
 
 ---
 
@@ -85,19 +88,20 @@ fire with a 'callback' parameter.
 </code>
 
 ###:: EXAMPLE ::
-####Switch between two strings with a custom font, size, and color
+####Switch between two centered strings with a custom font, size, and color
 
 <code>
     local toggle = require "toggle"
 
     local params = {
-        onText       = "On",
-        offText      = "Off",
-        font         = "Helvetica",
-        textSize     = "24",
-        textColorOn  = { 255, 0, 0 },
-        textColorOff = { 0, 255, 0 },
-        callback     = myFunction
+        onText         = "On",
+        offText        = "Off",
+        font           = "Helvetica",
+        textSize       = "24",
+        textColorOn    = { 255, 0, 0 },
+        textColorOff   = { 0, 255, 0 },
+        referencePoint = display.CenterReferencePoint,
+        callback       = myFunction
     }
 
     local myToggle = toggle.new( params )
