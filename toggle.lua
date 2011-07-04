@@ -109,30 +109,30 @@ ToggleClass.new = function(params)
     local onImg
     if params.onWidth and params.onHeight then
         onImg = display.newImageRect(params.on, params.onWidth, params.onHeight)
-        onImg:setReferencePoint(display.TopLeftReferencePoint)
+        onImg:setReferencePoint(params.referencePoint or display.TopLeftReferencePoint)
     elseif params.onText then
         params.textColorOn = params.textColorOn or {255,255,255}
         onImg = display.newText(params.onText, 0, 0, params.font, params.textSize)
-        onImg:setReferencePoint(display.CenterLeftReferencePoint)
+        onImg:setReferencePoint(params.referencePoint or display.TopLeftReferencePoint)
         onImg:setTextColor(params.textColorOn[1],params.textColorOn[2],params.textColorOn[3])
     else
         onImg = display.newImage(params.on)
-        onImg:setReferencePoint(display.TopLeftReferencePoint)
+        onImg:setReferencePoint(params.referencePoint or display.TopLeftReferencePoint)
     end
     onImg.x, onImg.y = 0, 0
 
     local offImg
     if params.offWidth and params.offHeight then
         offImg = display.newImageRect(params.off, params.offWidth, params.offHeight)
-        offImg:setReferencePoint(display.TopLeftReferencePoint)
+        offImg:setReferencePoint(params.referencePoint or display.TopLeftReferencePoint)
     elseif params.offText then
         params.textColorOff = params.textColorOn or {0,0,0}
         offImg = display.newText(params.offText, 0, 0, params.font, params.textSize)
-        offImg:setReferencePoint(display.CenterLeftReferencePoint)
+        offImg:setReferencePoint(params.referencePoint or display.TopLeftReferencePoint)
         offImg:setTextColor(params.textColorOff[1],params.textColorOff[2],params.textColorOff[3])
     else
         offImg = display.newImage(params.off)
-        offImg:setReferencePoint(display.TopLeftReferencePoint)
+        offImg:setReferencePoint(params.referencePoint or display.TopLeftReferencePoint)
     end
     offImg.x, offImg.y = 0, 0
 
@@ -162,15 +162,18 @@ ToggleClass.new = function(params)
     end
 
     if onImg.text then
-        onImgRect = display.newRect(0, 0, onImg.contentWidth, onImg.contentHeight*.5)
-        onImgRect:setReferencePoint(display.CenterLeftReferencePoint)
+        local onImgRect = display.newRect(0, 0, onImg.contentWidth*1.25, onImg.contentHeight)
+        onImgRect:setReferencePoint(params.referencePoint or display.TopLeftReferencePoint)
+        onImgRect.x, onImgRect.y = onImg.x, onImg.y
         onImgRect:setFillColor(0,0,0,0)
-        offImgRect = display.newRect(0, 0, offImg.contentWidth, offImg.contentHeight*.5)
-        offImgRect:setReferencePoint(display.CenterLeftReferencePoint)
+        local offImgRect = display.newRect(0, 0, offImg.contentWidth*1.25, offImg.contentHeight)
+        offImgRect:setReferencePoint(params.referencePoint or display.TopLeftReferencePoint)
+        offImgRect.x, offImgRect.y = offImg.x, offImg.y
         offImgRect:setFillColor(0,0,0,0)
         local rectGroup = display.newGroup(onImgRect, offImgRect)
         rectGroup:addEventListener("touch", toggle)
         toggle:insert(rectGroup)
+        onImgRect, offImgRect, rectGroup = nil, nil, nil
     else
         toggle:addEventListener("touch", toggle)
     end
