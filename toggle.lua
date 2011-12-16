@@ -162,15 +162,17 @@ ToggleClass.new = function(params)
     end
 
     if onImg.text then
-        local onImgRect = display.newRect(0, 0, onImg.contentWidth*1.25, onImg.contentHeight)
+        local onImgRect = display.newRect(0, 0, onImg.contentWidth*1.25, onImg.contentHeight * 0.6)
         onImgRect:setReferencePoint(params.referencePoint or display.TopLeftReferencePoint)
         onImgRect.x, onImgRect.y = onImg.x, onImg.y
         onImgRect:setFillColor(0,0,0,0)
-        local offImgRect = display.newRect(0, 0, offImg.contentWidth*1.25, offImg.contentHeight)
+        local offImgRect = display.newRect(0, 0, offImg.contentWidth*1.25, offImg.contentHeight * 0.6)
         offImgRect:setReferencePoint(params.referencePoint or display.TopLeftReferencePoint)
         offImgRect.x, offImgRect.y = offImg.x, offImg.y
         offImgRect:setFillColor(0,0,0,0)
         local rectGroup = display.newGroup(onImgRect, offImgRect)
+        rectGroup:setReferencePoint(params.referencePoint or display.TopLeftReferencePoint)
+        rectGroup.y = rectGroup.y + rectGroup.contentHeight * 0.2
         rectGroup:addEventListener("touch", toggle)
         toggle:insert(rectGroup)
         onImgRect, offImgRect, rectGroup = nil, nil, nil
