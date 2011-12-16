@@ -126,7 +126,7 @@ ToggleClass.new = function(params)
         offImg = display.newImageRect(params.off, params.offWidth, params.offHeight)
         offImg:setReferencePoint(params.referencePoint or display.TopLeftReferencePoint)
     elseif params.offText then
-        params.textColorOff = params.textColorOn or {0,0,0}
+        params.textColorOff = params.textColorOff or params.textColorOn
         offImg = display.newText(params.offText, 0, 0, params.font, params.textSize)
         offImg:setReferencePoint(params.referencePoint or display.TopLeftReferencePoint)
         offImg:setTextColor(params.textColorOff[1],params.textColorOff[2],params.textColorOff[3])
